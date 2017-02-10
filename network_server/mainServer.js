@@ -30,14 +30,12 @@
     app.post('/networkProbe',function(request,response){
     	 var id=request.body.network_id;
          if(id=='0'){
-        	 console.log('NEW NETWORK DETECTED !')
         	 var proposal_id=1;
              var fineID=false;
              while(!fineID){
             	 fineID=true;
             	 for (var i = 0; i < networkList.length; i++) {
          		    if (networkList[i].network_id==proposal_id){
-         		    	console.log(networkList[i][0])
          		    	proposal_id++;
          		    	fineID=false;
                         break;
@@ -47,6 +45,7 @@
              var network={"network_id":proposal_id,
             		 		"network_name":request.body.network_name,
             		 		"network_port":0,
+            		 		"network_time_init":(new Date).getTime(),
             		 		"network_time":(new Date).getTime()};
              networkList.push(network);
              response.end(proposal_id.toString());
@@ -57,7 +56,6 @@
       		    	networkList[i].network_time=(new Date).getTime()
       		    }
       		 }
-        	 console.log(networkList);
         	 response.end('OK')
          }
 	});
