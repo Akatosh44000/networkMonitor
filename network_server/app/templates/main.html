@@ -1,0 +1,18 @@
+<div class="container" ng-controller="networksController">
+	<table class="table table-condensed table-hover">
+	    <thead>
+	      <tr>
+	        <th>ID</th>
+	        <th>NAME</th>
+	        <th>STATUS</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat="network in networksList" ng-click="showNetwork(network.network_id)">
+	        <td>{{network.network_id}}</td>
+	        <td>{{network.network_name}}</td>
+	        <td style='color:{{network.network_color_status}}'>{{network.network_status}}</td>
+	      </tr>
+	    </tbody>
+ 	</table>
+    </div>

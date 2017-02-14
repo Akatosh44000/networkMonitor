@@ -42,26 +42,7 @@
       </div>
     </div>
 
-    <div class="container" ng-controller="networksController">
-	<table class="table table-condensed table-hover">
-	    <thead>
-	      <tr>
-	        <th>ID</th>
-	        <th>NAME</th>
-	        <th>PORT</th>
-	        <th>TIME</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	      <tr ng-repeat="network in networksList">
-	        <td>{{network.network_id}}</td>
-	        <td>{{network.network_name}}</td>
-	        <td>{{network.network_port}}</td>
-	        <td style='color:{{network.status}}'>{{network.network_time_launch}}</td>
-	      </tr>
-	    </tbody>
- 	</table>
-    </div>
+    <div ng-view></div>
 
     <div class="footer">
       <div class="container">
@@ -73,9 +54,15 @@
     <script src="https://code.angularjs.org/1.3.9/angular-route.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.min.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/networksController.js"></script>
+    <script src="scripts/controllers/networkController.js"></script>
     <script src="scripts/services/networksProbeService.js"></script>
-    
+    <script src="scripts/services/networkInfoService.js"></script>
+    <script src="scripts/services/networkMessageService.js"></script>
+    <script src="scripts/services/socketio.js"></script>
+ 
+		    
 	</body>
 </html>

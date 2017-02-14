@@ -1,0 +1,9 @@
+<div class="container" ng-controller="networkController">
+	<h1>Network # {{network_id}}</h1>
+	<p>NAME : {{network.network_name}}</p>
+	<p style='color:{{network.network_color_status}}'>STATUS : {{network.network_status}}</p>
+	<p>SOCKET : {{network.network_socket_id}}</p>
+	
+	<input type='button' value="CLICK ME !" ng-click='sendMessageToNetwork(network.network_socket_id);'/>
+
+</div>
