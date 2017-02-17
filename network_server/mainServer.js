@@ -37,16 +37,13 @@
     });
 
     app.post('/postNetworkMessage',function(request,response){
-    	console.log(request.body)
     	var socket_id=request.body.socket_id
     	var message=request.body.message
-    	console.log(message)
-    	
     	var socketList = io.sockets.server.eio.clients;
     	if (socketList[socket_id] === undefined){
     		response.json({'response' : 'None'});
     	}else{
-    		io.to(socket_id).emit('MESSAGE_FROM_SERVER', {'message':message});
+    		io.sockets.emit('MESSAGE_FROM_SERVER', {'message':message});
     		response.json({'response' : 'OK'});
     	}
     });
@@ -89,12 +86,14 @@
 				}
 			}
 		});
+		socket.on('MESSAGE_FROM_NETWORK', function (data) {
+			console.log('RECEIVED MESAGE FROM NETWORK' + data.message);
+		});
+		socket.on('REQUEST_FROM_CLIENT_TO_NETWORK', function (data) {
+			console.log('RECEIVED REQUEST '+data.request.name+' FROM CLIENT '+socket.id+' TO NETWORK '+data.network_socket_id)
+		});
     });
- 
-    
-    
 
-	
     // listen (start app with node server.js) ======================================
     server.listen(8080);
     console.log("App listening on port 8080");

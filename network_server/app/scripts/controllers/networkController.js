@@ -8,6 +8,7 @@ angular.module('networkServerApp').controller('networkController',
 		 networkInfoService.getNetworkInfo(network_id)
              .then(function(data) {
             	var network=data.network;
+            	console.log(network)
      			if(network.network_status=='off'){
     				network.network_color_status='red'
     			}else{
@@ -26,22 +27,15 @@ angular.module('networkServerApp').controller('networkController',
      socket.on('PROBE_FROM_SERVER', function (data) {
     	 getNetwork(network_id);
      });
+     socket.on('MESSAGE_FROM_SERVER', function (data) {
+    	 console.log('SERVER SAYS : ' + data)
+     });
      
      
-     $scope.sendMessageToNetwork = function(network_socket_id){
+     $scope.sendMessageToNetwork = function(network_socket_id,request){
     	 this.postMessage= function(network_socket_id){
-	    	 networkMessageService.postNetworkMessage({'socket_id':network_socket_id,'message':'getInfo'})
-		         .then(function(data) {
-		        	 if(data.response=='None'){
-		        		 console.log('ERROR WHILE POSTING MESSAGE TO NETWORK '+network_socket_id +
-        				 ' THE NETWORK SEEMS DISCONNECTED FROM SOCKETIO')
-		        	 }else{
-		        		 console.log(data.response)
-		        	 }
-		         },
-		         function(data) {
-	        		 console.log('ERROR WHILE POSTING MESSAGE TO NETWORK '+network_socket_id)
-		         });
+    		 socket.emit('REQUEST_FROM_CLIENT_TO_NETWORK',{'request':{'name':request,'params':'coucou'},
+    			 	'network_socket_id':network_socket_id})
      	};
      	this.postMessage(network_socket_id);
      };
