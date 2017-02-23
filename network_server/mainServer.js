@@ -82,7 +82,7 @@
 			console.log('INFO:: RECEIVED MESSAGE FROM NETWORK ' + socket.id + ' TO SERVER');
 			for (var i = 0; i < subscriptions.length; i++) {
 				if(subscriptions[i][1]==socket.id){
-					socket.broadcast.to(subscriptions[i][0]).emit('MESSAGE_FROM_NETWORK', message)
+					socket.broadcast.to(subscriptions[i][0]).emit('MESSAGE_FROM_NETWORK_TO_CLIENT', message)
 				}
 			}
 		});

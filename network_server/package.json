@@ -5,6 +5,7 @@
   "main": "mainServer.js",
   "author": "AKATOSH",
   "dependencies": {
+    "angular-chart.js": "^1.1.1",
     "body-parser": "^1.4.3",
     "express": "^4.13.4",
     "method-override": "^2.1.3",

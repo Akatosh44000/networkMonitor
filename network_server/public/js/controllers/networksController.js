@@ -9,7 +9,6 @@ angular.module('networkServerApp').controller('networksController',
   	socket.offAll('MESSAGE_FROM_SERVER_TO_CLIENT')
 	//RETRIEVAL BY SOCKETIO
     socket.on('MESSAGE_FROM_SERVER_TO_CLIENT', function (message) {
-    	console.log('net')
     	if(message.name=='networksList'){
     		$scope.networksList=networkInfoService.parseNetworksData(message.data.networksList)
     	}

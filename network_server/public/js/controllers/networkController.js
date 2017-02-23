@@ -1,13 +1,14 @@
 angular.module('networkServerApp').controller('networkController', 
-		function($routeParams,$scope,socket,networkInfoService,clientAPIService) {
+		function($routeParams,$scope,socket,networkInfoService,clientAPIService,graphService) {
 	
 	 network_id=$routeParams.network_id;
 	 $scope.network_id=network_id;
-	 
+     var chart=new graphService('',5);
+     
      (function init() {
     	 clientAPIService.sendRequestToServer('getNetworkInfoWithId',{'network_id':network_id});
      })();
-     
+
      socket.offAll('MESSAGE_FROM_SERVER_TO_CLIENT');
      socket.offAll('MESSAGE_FROM_NETWORK_TO_CLIENT');
 
@@ -16,12 +17,15 @@ angular.module('networkServerApp').controller('networkController',
       		 $scope.network=networkInfoService.parseNetworkData(msg.data.networkInfoWithId);
       		 subscribe($scope.network.network_socket_id)
       	 }
-      	 
      });
-     socket.on('MESSAGE_FROM_NETWORK_TO_CLIENT', function (msg) {		if(msg.name=='newEpoch'){
-			clientAPIService.sendRequestToNetwork($scope.network.network_socket_id,'getLoss');
+     socket.on('MESSAGE_FROM_NETWORK_TO_CLIENT', function (msg) {
+    	if(msg.name=='newEpoch'){
+			clientAPIService.sendRequestToNetwork('getParams','',$scope.network.network_socket_id);
 		}else if(msg.name=='params'){
-			console.log(msg.data);
+			chart.setData(msg.data.params)
+			//$scope.myDataSource.dataset[0].data[0].value = msg.data.params[0]*10000;
+		}else if(msg.name=='architecture'){
+			$scope.network.architecture=msg.data.architecture;
 		}
      });
 	
@@ -31,10 +35,12 @@ angular.module('networkServerApp').controller('networkController',
      
      subscribe = function(network_socket_id){
     	 clientAPIService.sendRequestToServer('subscribeToNetwork',{'network_socket_id':network_socket_id});
+    	 clientAPIService.sendRequestToNetwork('getNetworkArchitecture','',network_socket_id);
      }
      
-     $scope.sendRequestToNetwork1=function(name,params,network_socket_id){
-    	 clientAPIService.sendRequestToNetwork(name,params,network_socket_id)
-     }
+     $scope.sendRequestToNetwork=clientAPIService.sendRequestToNetwork;
+     
+     $scope.myDataSource=chart.getChart();
+
 });
 
