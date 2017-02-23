@@ -1,30 +1,18 @@
 angular.module('networkServerApp').controller('networksController', 
-		function($interval,$scope,$location,$http,socket,networksProbeService) {
-    
-	parseData=function(networks){
-		for (var i = 0; i < networks.length; i++) {
-			if(networks[i].network_status=='off'){
-				networks[i].network_color_status='red'
-			}else{
-				networks[i].network_color_status='green'
-			}
-		}
-		return networks;
-  	};
+		function($scope,$location,socket,networkInfoService,clientAPIService) {
+   
   	
-  	retreiveData=function(){
-  		$http.get('/getNetworksList').then(function(response){
-  			var networks=response.data.networks;
-  	        $scope.networksList = parseData(networks);
-  		});
-  	};
-  	
-	//LOADING RETRIEVAL
-  	retreiveData();
-
+    (function init() {
+    	clientAPIService.sendRequestToServer('getNetworksList',{});
+    })();
+  	$scope.sendRequestToServer=clientAPIService.sendRequestToServer;
+  	socket.offAll('MESSAGE_FROM_SERVER_TO_CLIENT')
 	//RETRIEVAL BY SOCKETIO
-    socket.on('PROBE_FROM_SERVER', function (data) {
-    	retreiveData();
+    socket.on('MESSAGE_FROM_SERVER_TO_CLIENT', function (message) {
+    	console.log('net')
+    	if(message.name=='networksList'){
+    		$scope.networksList=networkInfoService.parseNetworksData(message.data.networksList)
+    	}
     });
     
     $scope.showNetwork = function(network_id) {

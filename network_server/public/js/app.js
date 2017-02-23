@@ -1,17 +1,16 @@
 
-var networkServerApp=angular.module('networkServerApp', ["ngRoute"]);
+var networkServerApp=angular.module('networkServerApp', ['ngRoute']);
 networkServerApp.config(function($routeProvider) {
     $routeProvider
     .when("/", {
-        templateUrl : "templates/main.html"
+        templateUrl : "views/main.html"
     })
     .when("/network/:network_id", {
 
-        templateUrl : "templates/network.html"
+        templateUrl : "views/network.html"
     })
     .otherwise({
-        redirectTo: "templates/main.html"
+        redirectTo: "views/main.html"
     });
 
 });
-
