@@ -14,6 +14,7 @@
     
     // NETWORKS VARIABLE
     networkList=[]
+    subscriptions=[]
     
     // configuration =================
     app.use(express.static(__dirname + '/app'));                 // set the static files location /public/img will be /img for users
@@ -87,10 +88,43 @@
 			}
 		});
 		socket.on('MESSAGE_FROM_NETWORK', function (data) {
-			console.log('RECEIVED MESAGE FROM NETWORK' + data.message);
+			console.log('RECEIVED MESSAGE FROM NETWORK ' + data.message);
+			for (var i = 0; i < subscriptions.length; i++) {
+				if(subscriptions[i][1]==socket.id){
+					socket.broadcast.to(subscriptions[i][0]).emit('MESSAGE_FROM_NETWORK', data.message)
+				}
+			}
+		});
+		socket.on('MESSAGE_FROM_NETWORK_TO_CLIENT', function (data) {
+			console.log('RECEIVED MESSAGE FROM NETWORK ' + data.message + ' TO CLIENT ' + data.client_socket_id);
+			socket.broadcast.to(data.client_socket_id).emit('MESSAGE_FROM_NETWORK_TO_CLIENT', data.message)
 		});
 		socket.on('REQUEST_FROM_CLIENT_TO_NETWORK', function (data) {
 			console.log('RECEIVED REQUEST '+data.request.name+' FROM CLIENT '+socket.id+' TO NETWORK '+data.network_socket_id)
+			socket.broadcast.to(data.network_socket_id).emit('REQUEST_FROM_CLIENT_TO_NETWORK', 
+					{'client_socket_id':socket.id,'name':data.request.name,'params':{}});
+		});
+		socket.on('REQUEST_FROM_CLIENT_TO_SERVER', function (data) {
+			console.log('RECEIVED REQUEST '+data.request.name+' FROM CLIENT '+socket.id)
+			if(data.request.name=='subscribeToNetwork'){
+				for (var i = 0; i < subscriptions.length; i++) {
+					if(subscriptions[i][0]==socket.id && subscriptions[i][1]==data.request.params.network_socket_id){
+						console.log('CLIENT '+socket.id+' ALREADY SUBSCRIBED TO '+data.request.params.network_socket_id)
+						return 
+					}
+				}
+				subscriptions.push([socket.id,data.request.params.network_socket_id])
+				console.log('CLIENT '+socket.id+' SUBSCRIBED TO '+data.request.params.network_socket_id)
+			}
+			else if(data.request.name=='unsubscribeFromNetwork'){
+				for (var i = 0; i < subscriptions.length; i++) {
+					if(subscriptions[i][0]==socket.id && subscriptions[i][1]==data.request.params.network_socket_id){
+						subscriptions.splice(i,1);
+						console.log('CLIENT '+socket.id+' UNSUBSCRIBED FROM '+data.request.params.network_socket_id)
+						return 
+					}
+				}
+			}
 		});
     });
 
