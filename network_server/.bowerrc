@@ -1,3 +1,4 @@
 {
-  "directory": "bower_components"
+  "directory": "public/bower_components",
+  "https-proxy": "http://cache.ha.univ-nantes.fr:3128"
 }

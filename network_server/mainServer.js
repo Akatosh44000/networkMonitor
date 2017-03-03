@@ -93,7 +93,7 @@
 		socket.on('REQUEST_FROM_CLIENT_TO_NETWORK', function (request) {
 			console.log('INFO:: RECEIVED REQUEST '+request.name+' FROM CLIENT '+socket.id+' TO NETWORK '+request.network_socket_id)
 			socket.broadcast.to(request.network_socket_id).emit('REQUEST_FROM_CLIENT_TO_NETWORK', 
-					{'client_socket_id':socket.id,'name':request.name,'params':{}});
+					{'client_socket_id':socket.id,'name':request.name,'params':request.params});
 		});
 		socket.on('REQUEST_FROM_CLIENT_TO_SERVER', function (request) {
 			console.log('INFO:: RECEIVED REQUEST '+request.name+' FROM CLIENT '+socket.id)

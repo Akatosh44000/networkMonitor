@@ -1,14 +1,55 @@
-<div class="container" ng-controller="networkController">
+<div id="mainContainer" class="container" ng-controller="networkController">
 	<h1>Network # {{network_id}}</h1>
 	<p>NAME : {{network.network_name}}</p>
 	<p style='color:{{network.network_color_status}}'>STATUS : {{network.network_status}}</p>
-	<p>ARCHITECTURE : {{network.architecture}}</p>
-	<input type='button' value="TRAIN" ng-click='sendRequestToNetwork("setTrain","",network.network_socket_id);'/>
-	<input type='button' value="GET NEURONS" ng-click='sendRequestToNetwork("getParams","",network.network_socket_id);'/>
-	<fusioncharts 
-	    width="600" 
-	    height="400"
-	    type="zoomscatter"
-	    datasource="{{myDataSource}}"
-	></fusioncharts>
+    {{network.architecture}}
+    <table class="table table-condensed table-hover">
+	    <thead>
+	      <tr>
+	        <th>TYPE</th>
+	        <th>SHAPE</th>
+	        <th># VIEW</th>
+	      </tr>
+	    </thead>
+    <tbody>
+      <tr ng-repeat="layer in network.architecture">
+        <td>{{layer[0]}}</td>
+        <td>{{layer[1]}}</td>
+        <td><input type='text' ng-model="paramsChoice"/>
+        <img style="cursor: pointer;" src='img/arrow_right.png' ng-click='editSubscription(this.paramsChoice,$index)'/>
+        <input type='radio'/>
+        </td>
+      </tr>
+    </tbody>
+	 </table>
+	
+	<input type='button' value='TRAIN' ng-click='sendRequestToNetwork("setTrain","",network.network_socket_id);'/>
+
+<div ng-cloak>
+  <md-content>
+    <md-tabs md-dynamic-height md-border-bottom>
+      <md-tab label="one">
+        <md-content class="md-padding">
+          <h1 class="md-display-2">Tab One</h1>
+           </md-content>
+      </md-tab>
+      <md-tab label="two">
+        <md-content class="md-padding">
+          <h1 class="md-display-2">Tab Two</h1>
+          
+          
+	<div ng-repeat='sub in subscriptions track by $index'>
+		
+		<div ng-repeat='chartContent in sub.charts track by $index'>
+			<fusioncharts width="600" height="400"type="zoomscatter"datasource="{{chartContent}}"></fusioncharts>
+		</div>
+		<div ng-repeat='image in sub.kernelImages' style='float: left;margin:5px'>
+			<table class='tableImage'>
+		      <tr ng-repeat='row in image'>
+		      	<td class='tdImage' ng-repeat='col in row.columns track by $index' ng-style="myStyle={'background-color':col}"></td>
+		      </tr>
+			</table>
+		</div>
+	</div>
+
 </div>

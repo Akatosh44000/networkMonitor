@@ -5,6 +5,7 @@
   "main": "mainServer.js",
   "author": "AKATOSH",
   "dependencies": {
+    "@angular/material": "^2.0.0-beta.2",
     "angular-chart.js": "^1.1.1",
     "body-parser": "^1.4.3",
     "express": "^4.13.4",
