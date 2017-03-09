@@ -6,8 +6,13 @@ angular.module('networkServerApp').controller('imageController',
 		var context = canvas.getContext('2d');
 		var size=Math.sqrt($scope.image.length)
 		if($scope.sub.architecture.imageChoice=='true'){
-			canvas.height=50;
-			scale=Math.floor(50/size)+1
+			if(size>64){
+				scale=1
+			}else{
+				scale=Math.floor(64/size)+1
+			}
+			canvas.height=scale*size;
+			canvas.width=scale*size;
 			var imgData = context.createImageData(size*scale,size*scale);
 			var col=[]
 			for (var i = 0; i < size; i += 1) {

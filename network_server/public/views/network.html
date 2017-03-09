@@ -17,6 +17,9 @@
 					<li ng-class="{'active': view_tab == 'profile'}">
 						<a ng-click='changeTab("profile")'  href="">Pipeline</a>
 					</li>
+					<li ng-class="{'active': view_tab == 'dataset'}">
+						<a ng-click='changeTab("dataset")'  href="">Dataset</a>
+					</li>
 				</ul>
 			</div>
 			<div class="col-sm-9">
@@ -31,30 +34,32 @@
 										<md-content class="md-padding">
 											<p>{{sub.architecture.name}} LAYER</p>
 											<p>SHAPE : {{sub.architecture.shape}}</p>
-									        <label for="paramsRequest">Request parameters : </label><input id="paramsRequest" type='text' ng-model="paramsChoice"/>
-									        <img style="cursor: pointer;" src='img/arrow_right.png' ng-click='editParameterSubscription(this.paramsChoice,$index)'/>
-									        <div ng-cloak >
-												<md-content>
-													<md-tabs md-dynamic-height md-border-bottom>
-														<md-tab label="IMAGES" data-ng-if="sub.architecture.imageChoice=='true'">
-															<md-content class="md-padding">
-																<div style="text-align:center;">
-																	<div ng-repeat='image in sub.kernelImages' style='display:inline-block;margin:5px'>
-																		<canvas ng-controller="imageController" id="myCanvas" width="50" height="50">
-																		Your browser does not support the HTML5 canvas tag.</canvas>
+											<div data-ng-if="sub.architecture.explorable=='true'">
+										        <label for="paramsRequest">Request parameters : </label><input id="paramsRequest" type='text' ng-model="paramsChoice"/>
+										        <img style="cursor: pointer;" src='img/arrow_right.png' ng-click='editParameterSubscription(this.paramsChoice,$index)'/>
+										        <div ng-cloak >
+													<md-content>
+														<md-tabs md-dynamic-height md-border-bottom>
+															<md-tab label="IMAGES" data-ng-if="sub.architecture.imageChoice=='true'">
+																<md-content class="md-padding">
+																	<div style="text-align:center;">
+																		<div ng-repeat='image in sub.kernelImages' style='display:inline-block;margin:5px'>
+																			<canvas ng-controller="imageController" id="myCanvas" width="50" height="50">
+																			Your browser does not support the HTML5 canvas tag.</canvas>
+																		</div>
 																	</div>
-																</div>
-															</md-content>
-														</md-tab>
-														<md-tab label="PLOTS">
-															<md-content class="md-padding">
-																<div ng-repeat='chartContent in sub.charts track by $index' style="text-align:center;">
-																	<fusioncharts width="600" height="400"type="zoomscatter"datasource="{{chartContent}}"></fusioncharts>
-																</div>
-															</md-content>
-														</md-tab>
-													</md-tabs>
-												</md-content>
+																</md-content>
+															</md-tab>
+															<md-tab label="PLOTS">
+																<md-content class="md-padding">
+																	<div ng-repeat='chartContent in sub.charts track by $index' style="text-align:center;">
+																		<fusioncharts width="600" height="400"type="zoomscatter"datasource="{{chartContent}}"></fusioncharts>
+																	</div>
+																</md-content>
+															</md-tab>
+														</md-tabs>
+													</md-content>
+												</div>
 											</div>
 										</md-content>
 									</md-tab>
@@ -64,9 +69,9 @@
 					</div>
 					<div class="tab-pane active" ng-show="view_tab == 'profile'">
 						<p>NETWORK PIPELINE</p>
-				        <label for="paramsRequest">Request parameters : </label><input id="paramsRequest" type='text' ng-model="paramsChoice"/>
+				        <label for="paramsRequest">Request parameters : </label><input id="paramsRequest" type='text' ng-model="paramsPipelineChoice"/>
 						
-						<input type='button' value='GET PIPELINE' ng-click='editPipelineSubscription(this.paramsChoice);'/>
+						<input type='button' value='GET PIPELINE' ng-click='editPipelineSubscription(this.paramsPipelineChoice);'/>
 						
 						<div style="text-align:center;" ng-repeat="sub in subscriptions">
 							<div ng-repeat='image in sub.pipeline' style='display:inline-block;margin:5px'>
@@ -74,6 +79,30 @@
 								Your browser does not support the HTML5 canvas tag.
 								</canvas>
 							</div>
+						</div>
+					</div>
+					<div class="tab-pane active" ng-show="view_tab == 'dataset'">
+					<p>DATASET EXPLORER</p>
+						<div ng-cloak>
+							<md-content>
+								<md-tabs md-dynamic-height md-border-bottom>
+									<md-tab label="{{set.name}}" ng-repeat="set in dataset">
+										<md-content class="md-padding">
+											{{set.params}}
+									        <section class="row">
+									            <div class="col-md-6 col-md-offset-3">
+									                <p>Image #ID selection</p>
+									                <p>Value: {{items[0].value}}</p>
+									                <div data-range-slider
+									                     data-ceiling="set.params[0]"
+									                     data-ng-model="items[0].value" 
+									                     callback='changeBar(5)'></div>
+									            	</div>
+									        </section>
+										</md-content>
+									</md-tab>
+								</md-tabs>
+							</md-content>
 						</div>
 					</div>
 				</div>

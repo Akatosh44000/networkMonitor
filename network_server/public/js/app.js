@@ -1,5 +1,5 @@
 
-var networkServerApp=angular.module('networkServerApp', ['ngRoute','ngMaterial','ng-fusioncharts']);
+var networkServerApp=angular.module('networkServerApp', ['ngRoute','ngMaterial','ng-fusioncharts','angularRangeSlider']);
 networkServerApp.config(function($routeProvider) {
     $routeProvider
     .when("/", {

@@ -51,6 +51,8 @@ angular.module('networkServerApp').controller('networkController',
 		}else if(msg.name=='pipeline'){
 			img=parametersParsing.treatAsImages(msg.data.pipeline.images)
 			$scope.subscriptions[msg.data.pipeline.layer].pipeline=img;
+		}else if(msg.name=='datasetParams'){
+			$scope.dataset=msg.data.datasetParams;
 		}
 			
      });
@@ -60,7 +62,8 @@ angular.module('networkServerApp').controller('networkController',
      subscribe = function(network_socket_id){
     	 clientAPIService.sendRequestToServer('subscribeToNetwork',{'network_socket_id':network_socket_id});
     	 clientAPIService.sendRequestToNetwork('getNetworkArchitecture','',network_socket_id);
-    	 clientAPIService.sendRequestToNetwork('getParams','',network_socket_id);
+    	 clientAPIService.sendRequestToNetwork('getDatasetParams','',network_socket_id);
+    	 //clientAPIService.sendRequestToNetwork('getParams','',network_socket_id);
      }
      $scope.editParameterSubscription=function(parameters,layer){
     	 if(parameters){
@@ -98,5 +101,13 @@ angular.module('networkServerApp').controller('networkController',
         	 }
         }
      }
+     
+     
+     // Callback for standard slider call when mouse quit the slider
+     $scope.changeBar = function (value) {
+         console.log(value);
+     };
+     
+     
 });
 

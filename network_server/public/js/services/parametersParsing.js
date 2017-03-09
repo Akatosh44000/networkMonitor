@@ -43,20 +43,39 @@ angular.module('networkServerApp').service('parametersParsing',function() {
 	};
 	this.filterArchitecture=function(params){
 		newParams=[];
-		typesCount={'CONV':0,'FC':0};
+		typesCount={'CONV':0,'FC':0,'POOL':0};
 		for(var i=0;i<params.length;i++){
 			newParam={}
 			if(params[i][0]=='CONV'){
 				typesCount.CONV++;
 				newParam.name='CONV #'+typesCount.CONV
 				newParam.imageChoice='true';
+				newParam.explorable='true';
 				newParam.shape=params[i][1]
 			}else if(params[i][0]=='FC'){
 				typesCount.FC++;
 				newParam.name='FC #'+typesCount.FC
 				newParam.imageChoice='false';
+				newParam.explorable='true';
 				newParam.shape=params[i][1]
+			}else if(params[i][0]=='POOL'){
+				typesCount.POOL++;
+				newParam.name='POOLING #'+typesCount.POOL
+				newParam.imageChoice='true';
+				newParam.explorable='false';
+				newParam.shape=0;
+			}else if(params[i][0]=='INPUT'){
+				newParam.name='INPUT'
+				newParam.imageChoice='true';
+				newParam.explorable='false';
+				newParam.shape=params[i][1];
+			}else{
+				newParam.name='UNKNOWN';
+				newParam.imageChoice='false';
+				newParam.explorable='false';
+				newParam.shape=0;
 			}
+			
 			newParams.push(newParam)
 		}
 		return newParams
