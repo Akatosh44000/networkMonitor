@@ -24,35 +24,42 @@ angular.module('networkServerApp').service('parametersParsing',function() {
 		 }
 		 return res
 	}
+	this.filterPipeline=function(parameter){
+		if(!isNaN(parseInt(parameter)) && isFinite(parameter)){
+			res=parameter
+		}else{
+			res=''
+		}
+		return res
+	}
 	this.treatAsImages=function(dataO){
 		images=[]
-		 console.log(dataO.length)
 		 for(var k=0;k<dataO.length;k++){
-	   	 data=dataO[k][1]
-			 max=parseFloat(Math.max(...data))
-			 min=parseFloat(Math.abs(Math.min(...data)))
-			 for(var i=0;i<data.length;i++){
-				 data[i]=Math.floor(((parseFloat(data[i])+min)/(max+min))*255);
-				 if(data[i] >= 0 && data[i] <= 255){
-				    var n = (255 - data[i]).toString(16);
-				    data[i]="#" + n + n + n;
-				 }
-			 }
-	   	 image=[]
-	   	 var size=Math.sqrt(data.length)
-	   	 for(var i=0;i<size;i++){
-	   		 row={}
-	   		 col=[]
-	       	 for(var j=0;j<size;j++){
-	       		 col.push(data[i*size+j])
-	       	 }
-	   		 row.columns=col
-	   		 image.push(row)
-	   	 }
-	   	 images.push(image)
+			 data=dataO[k][1]
+	   	 images.push(data)
 		 }
 		return images
 
-	}
+	};
+	this.filterArchitecture=function(params){
+		newParams=[];
+		typesCount={'CONV':0,'FC':0};
+		for(var i=0;i<params.length;i++){
+			newParam={}
+			if(params[i][0]=='CONV'){
+				typesCount.CONV++;
+				newParam.name='CONV #'+typesCount.CONV
+				newParam.imageChoice='true';
+				newParam.shape=params[i][1]
+			}else if(params[i][0]=='FC'){
+				typesCount.FC++;
+				newParam.name='FC #'+typesCount.FC
+				newParam.imageChoice='false';
+				newParam.shape=params[i][1]
+			}
+			newParams.push(newParam)
+		}
+		return newParams
+	};
 	
 });

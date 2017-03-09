@@ -1,55 +1,83 @@
 <div id="mainContainer" class="container" ng-controller="networkController">
-	<h1>Network # {{network_id}}</h1>
-	<p>NAME : {{network.network_name}}</p>
-	<p style='color:{{network.network_color_status}}'>STATUS : {{network.network_status}}</p>
-    {{network.architecture}}
-    <table class="table table-condensed table-hover">
-	    <thead>
-	      <tr>
-	        <th>TYPE</th>
-	        <th>SHAPE</th>
-	        <th># VIEW</th>
-	      </tr>
-	    </thead>
-    <tbody>
-      <tr ng-repeat="layer in network.architecture">
-        <td>{{layer[0]}}</td>
-        <td>{{layer[1]}}</td>
-        <td><input type='text' ng-model="paramsChoice"/>
-        <img style="cursor: pointer;" src='img/arrow_right.png' ng-click='editSubscription(this.paramsChoice,$index)'/>
-        <input type='radio'/>
-        </td>
-      </tr>
-    </tbody>
-	 </table>
-	
-	<input type='button' value='TRAIN' ng-click='sendRequestToNetwork("setTrain","",network.network_socket_id);'/>
-
-<div ng-cloak>
-  <md-content>
-    <md-tabs md-dynamic-height md-border-bottom>
-      <md-tab label="one">
-        <md-content class="md-padding">
-          <h1 class="md-display-2">Tab One</h1>
-           </md-content>
-      </md-tab>
-      <md-tab label="two">
-        <md-content class="md-padding">
-          <h1 class="md-display-2">Tab Two</h1>
-          
-          
-	<div ng-repeat='sub in subscriptions track by $index'>
-		
-		<div ng-repeat='chartContent in sub.charts track by $index'>
-			<fusioncharts width="600" height="400"type="zoomscatter"datasource="{{chartContent}}"></fusioncharts>
-		</div>
-		<div ng-repeat='image in sub.kernelImages' style='float: left;margin:5px'>
-			<table class='tableImage'>
-		      <tr ng-repeat='row in image'>
-		      	<td class='tdImage' ng-repeat='col in row.columns track by $index' ng-style="myStyle={'background-color':col}"></td>
-		      </tr>
-			</table>
-		</div>
+	<div style="text-align:center;">
+		<h1>Network # {{network_id}}</h1>
+		<p>NAME : {{network.network_name}}</p>
+		<p style='color:{{network.network_color_status}}'>STATUS : {{network.network_status}}</p>
+		<input type='button' value='START TRAIN' ng-click='sendRequestToNetwork("setTrain","",network.network_socket_id);'/>
+		<input type='button' value='STOP TRAIN' ng-click='sendRequestToNetwork("stopTrain","",network.network_socket_id);'/>
+		<input type='button' value='TEST NETWORK' ng-click='sendRequestToNetwork("getTestError","",network.network_socket_id);'/>
 	</div>
-
+	<div style="min-height:30px"></div>
+	<div class="row" style="min-height:600px;">
+			<div class="col-xs-2"> 
+				<ul class="nav nav-tabs tabs-left" role="tablist">
+					<li ng-class="{'active': view_tab == 'home'}">
+						<a ng-click='changeTab("home")'  href="">Explorer</a>
+					</li>
+					<li ng-class="{'active': view_tab == 'profile'}">
+						<a ng-click='changeTab("profile")'  href="">Pipeline</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-sm-9">
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div class="tab-pane active" ng-show="view_tab == 'home'">
+						<p>NETWORK EXPLORER</p>
+						<div ng-cloak>
+							<md-content>
+								<md-tabs md-dynamic-height md-border-bottom>
+									<md-tab label="{{sub.architecture.name}}" ng-repeat="sub in subscriptions">
+										<md-content class="md-padding">
+											<p>{{sub.architecture.name}} LAYER</p>
+											<p>SHAPE : {{sub.architecture.shape}}</p>
+									        <label for="paramsRequest">Request parameters : </label><input id="paramsRequest" type='text' ng-model="paramsChoice"/>
+									        <img style="cursor: pointer;" src='img/arrow_right.png' ng-click='editParameterSubscription(this.paramsChoice,$index)'/>
+									        <div ng-cloak >
+												<md-content>
+													<md-tabs md-dynamic-height md-border-bottom>
+														<md-tab label="IMAGES" data-ng-if="sub.architecture.imageChoice=='true'">
+															<md-content class="md-padding">
+																<div style="text-align:center;">
+																	<div ng-repeat='image in sub.kernelImages' style='display:inline-block;margin:5px'>
+																		<canvas ng-controller="imageController" id="myCanvas" width="50" height="50">
+																		Your browser does not support the HTML5 canvas tag.</canvas>
+																	</div>
+																</div>
+															</md-content>
+														</md-tab>
+														<md-tab label="PLOTS">
+															<md-content class="md-padding">
+																<div ng-repeat='chartContent in sub.charts track by $index' style="text-align:center;">
+																	<fusioncharts width="600" height="400"type="zoomscatter"datasource="{{chartContent}}"></fusioncharts>
+																</div>
+															</md-content>
+														</md-tab>
+													</md-tabs>
+												</md-content>
+											</div>
+										</md-content>
+									</md-tab>
+								</md-tabs>
+							</md-content>
+						</div>
+					</div>
+					<div class="tab-pane active" ng-show="view_tab == 'profile'">
+						<p>NETWORK PIPELINE</p>
+				        <label for="paramsRequest">Request parameters : </label><input id="paramsRequest" type='text' ng-model="paramsChoice"/>
+						
+						<input type='button' value='GET PIPELINE' ng-click='editPipelineSubscription(this.paramsChoice);'/>
+						
+						<div style="text-align:center;" ng-repeat="sub in subscriptions">
+							<div ng-repeat='image in sub.pipeline' style='display:inline-block;margin:5px'>
+								<canvas ng-controller="imageController" id="myCanvas" width="50" height="50">
+								Your browser does not support the HTML5 canvas tag.
+								</canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 </div>
